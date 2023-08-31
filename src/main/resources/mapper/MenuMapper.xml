@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kerry.smartconferenceroom.mapper.MenuMapper">
+
+
+    <resultMap id="menuTree" type="menus">
+        <id column="menu_id" property="menuId"/>
+        <result column="menu_path" property="menuPath"/>
+        <result column="menu_title" property="menuTitle"/>
+        <result column="menu_icon" property="menuIcon"/>
+        <result column="parent_id" property="parentId"/>
+
+        <collection property="childs" ofType="menus" column="menu_id"
+                    select="findAllByParentIdMenus"/>
+
+
+    </resultMap>
+
+    <select id="findAllMenusWithChildren" resultMap="menuTree">
+        select *
+        from menus
+        where parent_id  is null
+    </select>
+
+    <select id="findAllByParentIdMenus" resultType="menus">
+        select *
+        from menus
+        where parent_id = #{parentId};
+    </select>
+</mapper>
